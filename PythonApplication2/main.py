@@ -19,7 +19,10 @@ async def on_message(message):
     _Message_Text = message.content
 
     if message.content.startswith("PlayingGame"):
-        await client.send_message(message.channel,message.mentions[0].game.name+message.mentions[0].id)
+        if(message.mentions[0].game==None):
+            await client.send_message(message.channel,message.mentions[0].name+'is not playing game')
+        else:
+            await client.send_message(message.channel,message.mentions[0].name+'isPlaying'+message.mentions[0].game.name)
 
     if message.content.startswith("pic:"):
                 await client.send_file(message.channel,"C:\\ProgwwwramTmp\\"+_Message_Text.split(":")[1]+".jpg")
@@ -179,4 +182,4 @@ async def on_member_update(before,after):
         
     sleep(10)
 
-client.run("NDU2MDYxOTY3MDQ0NDQ0MTkx.DsxL1w.itOm9nFRU5q5tdwhHH8biJduIYA")
+client.run("NDU2MDYxOTY3MDQ0NDQ0MTkx.Ds2-ZA.zmZ_yi63EjB0TRbB7EJp02Kd2WQ")
