@@ -3,6 +3,7 @@ import re
 import random
 import glob
 from time import sleep
+import datetime
 
 client = discord.Client()
 
@@ -17,6 +18,13 @@ async def on_ready():
 async def on_message(message):
 
     _Message_Text = message.content
+    if '何日' in message.content or '何曜日' in message.content or 'What day' in message.content or 'what day' in message.content or 'date today' in message.content or 'today\'s date' in message.content:
+        now_time = datetime.datetime.now()
+        await client.send_message(message.channel,'Today is'+now_time.strftime('%Y / %m / %d , %A'))
+
+    if '何時' in message.content or 'What time' in message.content or 'what time' in message.content:
+        now_time = datetime.datetime.now()
+        await client.send_message(message.channel,'It\'s'+now_time.strftime('%H : %M : %S '))
 
     if message.content.startswith("PlayingGame"):
         if(message.mentions[0].game==None):
@@ -84,37 +92,26 @@ async def on_message(message):
                 await client.send_message(message.channel,m)
             await client.send_message(message.channel,"--------------------------------")
 
-
-    if message.content.startswith("set:"):
-        _Specified_Channel = _Message_Text.split(":")[1]
+    if message.content.startswith("setUser:"):
         _SpecifiedMembers = message.mentions
         for member in _SpecifiedMembers:
-            _TextFileW = open(_Specified_Channel+"_"+member.name+".txt",'w')
-            _TextFileW.write("0")
-            _TextFileW.close()
+            _Channels = message.channel.server.channels
+            for C in _Channels:
+                _TextFileW = open(message.channel.server.id+'_'+member.name+'.txt','a')
+                _TextFileW.write(C.name+":0\n")
+                _TextFileW.close()
 
     if message.content.startswith("playnum"):
         _Specified_Channel = _Message_Text.split(":")[1]
         _SpecifiedMembers = message.mentions
             
-
         for m in _SpecifiedMembers:
-            _TextFileR = open(_Specified_Channel+"_"+m.name+".txt",'r')
-            await client.send_message(message.channel,m.name+":"+_TextFileR.readline())
+            _TextFileR = open(message.channel.server.id+'_'+m.name+".txt",'r')
+            lines = _TextFileR.readlines()
             _TextFileR.close()
-
-    if message.content.startswith("playnum_ch:"):
-        _Specified_Channel = _Message_Text.split(":")[1]
-        path = "C:\\Users\\さはら\\source\\repos\\PythonApplication2\\PythonApplication2\\r6s_*.txt"
-        files = glob.glob(path)
-
-        for f in files:
-            _FileName = f.split("\\")[7]
-            _TextFileR = open(_FileName)
-            _UserName = _FileName.split("_")[1]
-            _UserName = _UserName.split(".")[0]
-            await client.send_message(message.channel,_UserName+":"+_TextFileR.readline())
-            _TextFileR.close
+            print(lines)
+        for line in lines:
+                await client.send_message(message.channel,line)
 
     if message.content.startswith("-Play"):
         _Specified_Channel = message.content.split(" ")[1]
@@ -169,17 +166,20 @@ async def on_message(message):
 
 @client.event
 async def on_member_update(before,after):
-    if(before.game!=after.game):
-        if(after.game==None):
+    if before.game!=after.game:
+        now_time = datetime.datetime.now()
+        await client.send_message(message.channel,now_time)
+        if after.game==None :
             #await client.send_message(client.get_channel('457486096155148291'),after.name+'is not playing game')
-            if(after.name=='かなめ　しおん'):
+            if after.name=='かなめ　しおん' :
                 await client.send_message(client.get_channel('460052349579165696'),after.name+'is not playing game')
         else:
             #await client.send_message(client.get_channel('457486096155148291'),after.name+'isPlaying'+after.game.name)
-            if(after.name=='かなめ　しおん'):
+            if after.name=='かなめ　しおん' :
                 await client.send_message(client.get_channel('460052349579165696'),after.name+'isPlaying'+after.game.name)
 
         
     sleep(10)
+
 
 client.run("NDU2MDYxOTY3MDQ0NDQ0MTkx.Ds2-ZA.zmZ_yi63EjB0TRbB7EJp02Kd2WQ")
