@@ -33,7 +33,7 @@ async def on_message(message):
             await client.send_message(message.channel,message.mentions[0].name+'isPlaying'+message.mentions[0].game.name)
 
     if message.content.startswith("pic:"):
-                await client.send_file(message.channel,"C:\\ProgwwwramTmp\\"+_Message_Text.split(":")[1]+".jpg")
+                await client.send_file(message.channel,"C:\\ProgramTmp\\"+_Message_Text.split(":")[1]+".jpg")
 
     if message.content.startswith("start:"):
         if client.user != message.author:
